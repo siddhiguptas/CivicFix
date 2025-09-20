@@ -13,7 +13,7 @@ export default function UnauthorizedPage() {
           <AlertTriangle className="h-16 w-16 text-red-500 mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-900">Access Denied</h1>
           <p className="mt-2 text-sm text-gray-600">
-            You don't have permission to access this page
+            You don&apos;t have permission to access this page
           </p>
         </div>
 
@@ -21,7 +21,7 @@ export default function UnauthorizedPage() {
           <CardHeader>
             <CardTitle>Unauthorized Access</CardTitle>
             <CardDescription>
-              Your account doesn't have the required permissions to view this page.
+              Your account doesn&apos;t have the required permissions to view this page.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">

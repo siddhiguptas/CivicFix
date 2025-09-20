@@ -542,7 +542,7 @@ export default function NewGrievancePage() {
               <CardHeader>
                 <CardTitle>Issue Details</CardTitle>
                 <CardDescription>
-                  Provide detailed information about the issue you've encountered
+                  Provide detailed information about the issue you&apos;ve encountered
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -873,7 +873,7 @@ export default function NewGrievancePage() {
                     <li>• Ensure all information is accurate</li>
                     <li>• Upload 1-5 clear photos of the issue (Required)</li>
                     <li>• Select the exact location on the map (Required)</li>
-                    <li>• You'll receive updates on the resolution progress</li>
+                    <li>• You&apos;ll receive updates on the resolution progress</li>
                   </ul>
                 </div>
               </CardContent>

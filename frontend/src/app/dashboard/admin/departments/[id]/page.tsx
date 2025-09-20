@@ -171,7 +171,7 @@ export default function DepartmentDetailsPage() {
       <div className="text-center py-12">
         <Building2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">Department not found</h3>
-        <p className="text-gray-600 mb-4">The department you're looking for doesn't exist.</p>
+        <p className="text-gray-600 mb-4">The department you&apos;re looking for doesn&apos;t exist.</p>
         <Button onClick={() => router.back()}>
           <ArrowLeft className="h-4 w-4 mr-2" />
           Go Back
@@ -346,7 +346,7 @@ export default function DepartmentDetailsPage() {
                 <div className="text-center py-8">
                   <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No grievances assigned</h3>
-                  <p className="text-gray-600">This department doesn't have any assigned grievances yet.</p>
+                  <p className="text-gray-600">This department doesn&apos;t have any assigned grievances yet.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
