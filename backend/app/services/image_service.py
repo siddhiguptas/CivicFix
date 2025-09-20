@@ -2,9 +2,16 @@
 Image processing and storage service
 """
 
-import cloudinary
-import cloudinary.uploader
-from cloudinary.utils import cloudinary_url
+try:
+    import cloudinary
+    import cloudinary.uploader
+    from cloudinary.utils import cloudinary_url
+    CLOUDINARY_AVAILABLE = True
+except ImportError:
+    CLOUDINARY_AVAILABLE = False
+    cloudinary = None
+    cloudinary_uploader = None
+    cloudinary_url = None
 from typing import List, Optional, Dict, Any
 from fastapi import HTTPException, status, UploadFile
 from app.core.config import settings
@@ -21,14 +28,23 @@ class ImageService:
     
     def __init__(self):
         # Configure Cloudinary
-        cloudinary.config(
-            cloud_name=settings.CLOUDINARY_CLOUD_NAME,
-            api_key=settings.CLOUDINARY_API_KEY,
-            api_secret=settings.CLOUDINARY_API_SECRET
-        )
+        if CLOUDINARY_AVAILABLE and settings.CLOUDINARY_CLOUD_NAME:
+            cloudinary.config(
+                cloud_name=settings.CLOUDINARY_CLOUD_NAME,
+                api_key=settings.CLOUDINARY_API_KEY,
+                api_secret=settings.CLOUDINARY_API_SECRET
+            )
+        else:
+            logger.warning("Cloudinary not available or not configured")
     
     async def upload_image(self, file: UploadFile, folder: str = "grievances") -> ImageMetadata:
         """Upload image to Cloudinary"""
+        if not CLOUDINARY_AVAILABLE:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Image upload service not available"
+            )
+        
         try:
             # Validate file type
             if file.content_type not in settings.ALLOWED_IMAGE_TYPES:
