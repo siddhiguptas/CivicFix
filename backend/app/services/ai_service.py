@@ -3,7 +3,13 @@ AI service for image analysis and classification
 """
 
 import os
-from clarifai.client.model import Model
+try:
+    from clarifai.client.model import Model
+    CLARIFAI_AVAILABLE = True
+except ImportError:
+    CLARIFAI_AVAILABLE = False
+    Model = None
+
 try:
     import google.generativeai as genai
 except ImportError:
@@ -38,13 +44,15 @@ class AIService:
             self.gemini_model = None
         
         # Initialize Clarifai model
-        if self.clarifai_api_key:
+        if self.clarifai_api_key and CLARIFAI_AVAILABLE:
             self.clarifai_model = Model(
                 url="https://clarifai.com/clarifai/main/models/general-image-recognition",
                 pat=self.clarifai_api_key
             )
         else:
             self.clarifai_model = None
+            if not CLARIFAI_AVAILABLE:
+                logger.warning("Clarifai package not available")
         
         # Category mapping for civic issues
         self.category_keywords = {
