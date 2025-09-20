@@ -129,10 +129,10 @@ export class ChatbotService {
       this.chatHistory.push(errorMessage);
       this.saveChatHistory();
 
-      const errorMessage = error instanceof Error && 'response' in error 
+      const errorDetail = error instanceof Error && 'response' in error 
         ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to send message'
         : 'Failed to send message';
-      throw new Error(errorMessage);
+      throw new Error(errorDetail);
     }
   }
 
