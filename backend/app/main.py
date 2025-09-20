@@ -10,7 +10,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 
 from app.core.config import settings
-from app.core.database import connect_to_mongo, close_mongo_connection
+from app.core.database import connect_to_mongo, close_mongo_connection, database
 from app.api.v1.api import api_router
 from app.core.exceptions import add_exception_handlers
 
@@ -19,10 +19,17 @@ from app.core.exceptions import add_exception_handlers
 async def lifespan(app: FastAPI):
     """Application lifespan events"""
     # Startup
-    await connect_to_mongo()
+    try:
+        await connect_to_mongo()
+    except Exception as e:
+        print(f"Warning: Could not connect to MongoDB: {e}")
+        print("App will continue without database connection")
     yield
     # Shutdown
-    await close_mongo_connection()
+    try:
+        await close_mongo_connection()
+    except Exception as e:
+        print(f"Warning: Error closing MongoDB connection: {e}")
 
 
 # Create FastAPI application
@@ -64,14 +71,19 @@ async def root():
         "message": "🏛️ Civic Connect API is running!",
         "version": "1.0.0",
         "docs": "/docs",
-        "status": "healthy"
+        "status": "healthy",
+        "database": "connected" if database is not None else "not configured"
     }
 
 
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    return {"status": "healthy", "message": "API is running"}
+    return {
+        "status": "healthy", 
+        "message": "API is running",
+        "database": "connected" if database is not None else "not configured"
+    }
 
 
 if __name__ == "__main__":

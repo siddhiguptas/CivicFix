@@ -18,6 +18,11 @@ async def connect_to_mongo():
     """Create database connection"""
     global client, database
     
+    # Check if MongoDB URL is configured
+    if not settings.MONGODB_URL or settings.MONGODB_URL == "mongodb://localhost:27017":
+        logger.warning("⚠️ MongoDB URL not configured, skipping database connection")
+        return
+    
     try:
         client = AsyncIOMotorClient(settings.MONGODB_URL)
         
@@ -40,7 +45,9 @@ async def connect_to_mongo():
         
     except Exception as e:
         logger.error(f"❌ Failed to connect to MongoDB: {e}")
-        raise
+        # Don't raise the exception, let the app continue
+        client = None
+        database = None
 
 
 async def close_mongo_connection():
@@ -81,9 +88,13 @@ async def create_indexes():
 
 def get_database():
     """Get database instance"""
+    if database is None:
+        raise Exception("Database not connected. Please check your MongoDB configuration.")
     return database
 
 
 def get_collection(collection_name: str):
     """Get collection instance"""
+    if database is None:
+        raise Exception("Database not connected. Please check your MongoDB configuration.")
     return database[collection_name]
