@@ -1,3 +1,7 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -5,9 +9,32 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { Search, Clock, CheckCircle, AlertCircle, XCircle } from "lucide-react"
+import { Search, Clock, CheckCircle, AlertCircle, XCircle, Lock } from "lucide-react"
 
 export default function TrackPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter()
+
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      const authStatus = localStorage.getItem("isAuthenticated")
+      if (authStatus === "true") {
+        setIsAuthenticated(true)
+      } else {
+        setIsAuthenticated(false)
+      }
+      setIsLoading(false)
+    }
+    checkAuthStatus()
+  }, [])
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push("/login?redirect=/track")
+    }
+  }, [isAuthenticated, isLoading, router])
+
   const sampleGrievances = [
     {
       id: "GRV-2024-001",
@@ -75,6 +102,45 @@ export default function TrackPage() {
       default:
         return "bg-gray-500/10 text-gray-500 border-gray-500/20"
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background grid-bg flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-background grid-bg">
+        <Header />
+        <main className="container mx-auto px-4 py-12 flex items-center justify-center min-h-[80vh]">
+          <Card className="glass max-w-md w-full">
+            <CardHeader className="text-center">
+              <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <Lock className="h-6 w-6 text-primary" />
+              </div>
+              <CardTitle>Authentication Required</CardTitle>
+              <CardDescription>Please sign in to track your grievances and view status updates</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button onClick={() => router.push("/login?redirect=/track")} className="w-full">
+                Sign In to Continue
+              </Button>
+              <Button variant="outline" onClick={() => router.push("/register?redirect=/track")} className="w-full">
+                Create Account
+              </Button>
+            </CardContent>
+          </Card>
+        </main>
+        <Footer />
+      </div>
+    )
   }
 
   return (

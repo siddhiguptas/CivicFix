@@ -93,26 +93,6 @@ export default function ServicesPage() {
             </Card>
           ))}
         </div>
-
-        {/* CTA Section */}
-        <div className="text-center">
-          <Card className="glass max-w-2xl mx-auto">
-            <CardContent className="pt-8">
-              <h2 className="text-2xl font-bold mb-4">Ready to Get Started?</h2>
-              <p className="text-muted-foreground mb-6">
-                Join thousands of citizens already using our platform to engage with local government
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button asChild size="lg">
-                  <Link href="/register">Create Account</Link>
-                </Button>
-                <Button variant="outline" asChild size="lg">
-                  <Link href="/login">Sign In</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </main>
 
       <Footer />

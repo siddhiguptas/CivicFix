@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -18,7 +18,10 @@ export function LoginForm() {
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { toast } = useToast()
+
+  const redirectTo = searchParams.get("redirect") || "/dashboard/citizen"
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,15 +32,25 @@ export function LoginForm() {
 
     // Simple validation for demo
     if (email && password) {
+      localStorage.setItem("isAuthenticated", "true")
+
+      const userRole = email.includes("admin") || email.includes("gov") ? "admin" : "citizen"
+      const userData = {
+        name: userRole === "admin" ? "Admin User" : "John Doe",
+        email: email,
+        role: userRole,
+      }
+      localStorage.setItem("userData", JSON.stringify(userData))
+
       toast({
         title: "Login Successful",
         description: "Welcome back to Civic Connect!",
       })
-      // Redirect to dashboard based on email domain or role
-      if (email.includes("admin") || email.includes("gov")) {
-        router.push("/dashboard/admin")
+
+      if (redirectTo && redirectTo !== "/dashboard/citizen" && redirectTo !== "/dashboard/admin") {
+        router.push(redirectTo)
       } else {
-        router.push("/dashboard/citizen")
+        router.push(`/dashboard/${userRole}`)
       }
     } else {
       toast({
@@ -52,17 +65,36 @@ export function LoginForm() {
   const handleDemoLogin = (role: "citizen" | "admin") => {
     setIsLoading(true)
     setTimeout(() => {
+      localStorage.setItem("isAuthenticated", "true")
+      const userData = {
+        name: role === "admin" ? "Demo Admin" : "Demo Citizen",
+        email: `demo.${role}@civicconnect.com`,
+        role: role,
+      }
+      localStorage.setItem("userData", JSON.stringify(userData))
+
       toast({
         title: "Demo Access Granted",
         description: `Welcome to the ${role} demo!`,
       })
-      router.push(`/dashboard/${role}`)
+
+      if (redirectTo && redirectTo !== "/dashboard/citizen" && redirectTo !== "/dashboard/admin") {
+        router.push(redirectTo)
+      } else {
+        router.push(`/dashboard/${role}`)
+      }
       setIsLoading(false)
     }, 800)
   }
 
   return (
     <div className="space-y-6">
+      {searchParams.get("redirect") && (
+        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-blue-800 text-sm">
+          Please sign in to access the requested page.
+        </div>
+      )}
+
       <Card className="glass hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4 pt-6">
@@ -167,7 +199,10 @@ export function LoginForm() {
       <div className="text-center">
         <p className="text-sm text-muted-foreground">
           Don't have an account?{" "}
-          <Link href="/register" className="text-primary hover:underline transition-colors duration-200">
+          <Link
+            href={`/register${searchParams.get("redirect") ? `?redirect=${searchParams.get("redirect")}` : ""}`}
+            className="text-primary hover:underline transition-colors duration-200"
+          >
             Sign up
           </Link>
         </p>

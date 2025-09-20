@@ -1,9 +1,7 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Users, Target, Award, Zap, Shield, Globe } from "lucide-react"
-import Link from "next/link"
 
 export default function AboutPage() {
   const features = [
@@ -154,25 +152,6 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
-
-        {/* CTA Section */}
-        <Card className="glass text-center">
-          <CardContent className="pt-8">
-            <h2 className="text-2xl font-bold mb-4">Ready to Make a Difference?</h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Join thousands of citizens who are already using Civic Connect to engage with their local government and
-              create positive change in their communities.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg">
-                <Link href="/register">Get Started Today</Link>
-              </Button>
-              <Button variant="outline" asChild size="lg">
-                <Link href="/contact">Contact Us</Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </main>
 
       <Footer />
