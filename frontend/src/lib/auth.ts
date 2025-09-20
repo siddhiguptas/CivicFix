@@ -110,7 +110,7 @@ export class AuthService {
       return response.data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Registration failed'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Registration failed'
         : 'Registration failed';
       throw new Error(errorMessage);
     }
@@ -132,7 +132,7 @@ export class AuthService {
       return authData;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.message || 'Login failed'
+        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Login failed'
         : 'Login failed';
       throw new Error(errorMessage);
     }
@@ -164,7 +164,7 @@ export class AuthService {
     } catch (error: unknown) {
       this.clearAuth();
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to get user data'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to get user data'
         : 'Failed to get user data';
       throw new Error(errorMessage);
     }
@@ -219,7 +219,7 @@ export class AuthService {
       return response.data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to create demo users'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to create demo users'
         : 'Failed to create demo users';
       throw new Error(errorMessage);
     }

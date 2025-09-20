@@ -123,7 +123,7 @@ export class GrievanceService {
       return response.data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to create grievance'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to create grievance'
         : 'Failed to create grievance';
       throw new Error(errorMessage);
     }
@@ -145,7 +145,7 @@ export class GrievanceService {
       return response.data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to fetch grievances'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to fetch grievances'
         : 'Failed to fetch grievances';
       throw new Error(errorMessage);
     }
@@ -158,7 +158,7 @@ export class GrievanceService {
       return response.data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to fetch grievance'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to fetch grievance'
         : 'Failed to fetch grievance';
       throw new Error(errorMessage);
     }
@@ -171,7 +171,7 @@ export class GrievanceService {
       return response.data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to update grievance'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to update grievance'
         : 'Failed to update grievance';
       throw new Error(errorMessage);
     }
@@ -183,7 +183,7 @@ export class GrievanceService {
       await api.delete(API_ENDPOINTS.GRIEVANCES.DELETE(id));
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to delete grievance'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to delete grievance'
         : 'Failed to delete grievance';
       throw new Error(errorMessage);
     }
@@ -196,7 +196,7 @@ export class GrievanceService {
       return response.data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to fetch stats'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to fetch stats'
         : 'Failed to fetch stats';
       throw new Error(errorMessage);
     }
@@ -209,7 +209,7 @@ export class GrievanceService {
       return response.data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to fetch admin stats'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to fetch admin stats'
         : 'Failed to fetch admin stats';
       throw new Error(errorMessage);
     }
@@ -224,7 +224,7 @@ export class GrievanceService {
       return response.data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to assign department'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to assign department'
         : 'Failed to assign department';
       throw new Error(errorMessage);
     }
@@ -239,7 +239,7 @@ export class GrievanceService {
       return response.data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to update status'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to update status'
         : 'Failed to update status';
       throw new Error(errorMessage);
     }

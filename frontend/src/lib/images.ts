@@ -75,7 +75,7 @@ export class ImageService {
       return response.data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to upload image'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to upload image'
         : 'Failed to upload image';
       throw new Error(errorMessage);
     }
@@ -91,7 +91,7 @@ export class ImageService {
       return await Promise.all(uploadPromises);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to upload images'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to upload images'
         : 'Failed to upload images';
       throw new Error(errorMessage);
     }
@@ -106,7 +106,7 @@ export class ImageService {
       return response.data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to analyze image'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to analyze image'
         : 'Failed to analyze image';
       throw new Error(errorMessage);
     }
@@ -118,7 +118,7 @@ export class ImageService {
       await api.delete(API_ENDPOINTS.IMAGES.DELETE(imageId));
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as any).response?.data?.detail || 'Failed to delete image'
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to delete image'
         : 'Failed to delete image';
       throw new Error(errorMessage);
     }
