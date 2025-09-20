@@ -1,12 +1,14 @@
 import { api, API_ENDPOINTS } from './api';
 
 // Types
+export type UserRole = 'citizen' | 'admin' | 'department_head' | 'moderator';
+
 export interface User {
   id: string;
   email: string;
   full_name: string;
   phone?: string;
-  role: 'citizen' | 'admin' | 'department_head' | 'moderator';
+  role: UserRole;
   department?: string;
   status: 'active' | 'inactive' | 'suspended' | 'pending_verification';
   created_at: string;
@@ -26,7 +28,7 @@ export interface RegisterRequest {
   password: string;
   full_name: string;
   phone?: string;
-  role?: 'citizen' | 'admin' | 'department_head' | 'moderator';
+  role?: UserRole;
 }
 
 export interface AuthResponse {
@@ -106,8 +108,11 @@ export class AuthService {
     try {
       const response = await api.post(API_ENDPOINTS.AUTH.REGISTER, data);
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Registration failed');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Registration failed'
+        : 'Registration failed';
+      throw new Error(errorMessage);
     }
   }
 
@@ -125,8 +130,11 @@ export class AuthService {
       this.saveUserToStorage(userResponse);
       
       return authData;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Login failed');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.message || 'Login failed'
+        : 'Login failed';
+      throw new Error(errorMessage);
     }
   }
 
@@ -153,9 +161,12 @@ export class AuthService {
       
       this.saveUserToStorage(user);
       return user;
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.clearAuth();
-      throw new Error(error.response?.data?.detail || 'Failed to get user data');
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to get user data'
+        : 'Failed to get user data';
+      throw new Error(errorMessage);
     }
   }
 
@@ -206,8 +217,11 @@ export class AuthService {
     try {
       const response = await api.post(API_ENDPOINTS.AUTH.CREATE_DEMO_USERS);
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to create demo users');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to create demo users'
+        : 'Failed to create demo users';
+      throw new Error(errorMessage);
     }
   }
 }

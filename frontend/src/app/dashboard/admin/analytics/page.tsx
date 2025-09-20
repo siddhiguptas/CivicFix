@@ -91,7 +91,7 @@ export default function AnalyticsPage() {
         // Load analytics data
         const response = await api.get(API_ENDPOINTS.ADMIN.STATS);
         setAnalytics(response.data);
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Error loading analytics:', error);
         toast.error('Failed to load analytics data');
       } finally {

@@ -25,7 +25,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { authService, User } from '@/lib/auth';
-import { grievanceService } from '@/lib/grievances';
+import { grievanceService, GrievanceCategory, GrievancePriority } from '@/lib/grievances';
 import { imageService } from '@/lib/images';
 import api from '@/lib/api';
 import { toast } from 'sonner';
@@ -35,7 +35,7 @@ const grievanceSchema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters'),
   description: z.string().min(10, 'Description must be at least 10 characters'),
   category: z.enum(['infrastructure', 'sanitation', 'transportation', 'utilities', 'safety', 'other']),
-  priority: z.enum(['low', 'medium', 'high']),
+  priority: z.enum(['low', 'medium', 'high', 'urgent']),
   location: z.object({
     address: z.string().min(1, 'Address is required'),
     coordinates: z.object({
@@ -57,7 +57,7 @@ export default function NewGrievancePage() {
   const [error, setError] = useState('');
   const [images, setImages] = useState<File[]>([]);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
-  const [aiAnalysis, setAiAnalysis] = useState<any>(null);
+  const [aiAnalysis, setAiAnalysis] = useState<Record<string, unknown> | null>(null);
   const [suggestedDepartment, setSuggestedDepartment] = useState<string>('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [location, setLocation] = useState<{ 
@@ -126,7 +126,7 @@ export default function NewGrievancePage() {
       // Geocode the location
       await geocodeLocation(latitude, longitude);
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error detecting location:', error);
       toast.error('Could not detect your location. Please select manually on the map.');
     } finally {
@@ -507,9 +507,10 @@ export default function NewGrievancePage() {
       await grievanceService.createGrievance(grievanceData);
       toast.success('Grievance reported successfully!');
       router.push('/dashboard/grievances');
-    } catch (error: any) {
-      setError(error.message);
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create grievance';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -604,7 +605,7 @@ export default function NewGrievancePage() {
                     <Label htmlFor="category">Category *</Label>
                     <Select
                       value={watch('category')}
-                      onValueChange={(value) => setValue('category', value as any)}
+                      onValueChange={(value) => setValue('category', value as GrievanceCategory)}
                       disabled={isLoading}
                     >
                       <SelectTrigger>
@@ -628,7 +629,7 @@ export default function NewGrievancePage() {
                     <Label htmlFor="priority">Priority *</Label>
                     <Select
                       value={watch('priority')}
-                      onValueChange={(value) => setValue('priority', value as any)}
+                      onValueChange={(value) => setValue('priority', value as GrievancePriority)}
                       disabled={isLoading}
                     >
                       <SelectTrigger>
@@ -638,6 +639,7 @@ export default function NewGrievancePage() {
                         <SelectItem value="low">Low</SelectItem>
                         <SelectItem value="medium">Medium</SelectItem>
                         <SelectItem value="high">High</SelectItem>
+                        <SelectItem value="urgent">Urgent</SelectItem>
                       </SelectContent>
                     </Select>
                     {errors.priority && (

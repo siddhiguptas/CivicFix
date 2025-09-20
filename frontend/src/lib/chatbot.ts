@@ -117,7 +117,7 @@ export class ChatbotService {
       this.saveChatHistory();
 
       return botResponse;
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Add error message to history
       const errorMessage: ChatMessage = {
         id: Date.now().toString(),

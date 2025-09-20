@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { authService, User as UserType } from '@/lib/auth';
-import { grievanceService, Grievance } from '@/lib/grievances';
+import { grievanceService, Grievance, GrievanceStatus } from '@/lib/grievances';
 import api, { API_ENDPOINTS } from '@/lib/api';
 import { toast } from 'sonner';
 
@@ -124,12 +124,13 @@ export default function GrievanceDetailPage() {
         });
       } else {
         // Use regular endpoint for citizens
-        await grievanceService.updateGrievance(grievance.id, { status: newStatus as any });
+        await grievanceService.updateGrievance(grievance.id, { status: newStatus as GrievanceStatus });
       }
-      setGrievance(prev => prev ? { ...prev, status: newStatus as any } : null);
+      setGrievance(prev => prev ? { ...prev, status: newStatus as GrievanceStatus } : null);
       toast.success('Status updated successfully');
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update status';
+      toast.error(errorMessage);
     } finally {
       setIsUpdating(false);
     }

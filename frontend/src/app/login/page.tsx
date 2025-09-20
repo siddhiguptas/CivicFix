@@ -44,9 +44,10 @@ export default function LoginPage() {
       await authService.login(data);
       toast.success('Login successful!');
       router.push('/dashboard');
-    } catch (error: any) {
-      setError(error.message);
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Login failed';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -60,9 +61,10 @@ export default function LoginPage() {
       await authService.login({ email, password });
       toast.success(`Logged in as ${role}`);
       router.push('/dashboard');
-    } catch (error: any) {
-      setError(error.message);
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Login failed';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

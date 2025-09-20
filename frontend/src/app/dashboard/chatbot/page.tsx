@@ -140,7 +140,7 @@ export default function ChatbotPage() {
         }, 100);
       }, 1000 + Math.random() * 1000); // 1-2 second delay
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error sending message:', error);
       
       // Add error message to UI

@@ -130,8 +130,9 @@ export default function DemoPage() {
       await authService.login({ email, password });
       toast.success(`Logged in as ${role}`);
       router.push('/dashboard');
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Login failed';
+      toast.error(errorMessage);
     } finally {
       setIsLoading(null);
     }

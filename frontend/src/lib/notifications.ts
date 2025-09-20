@@ -12,7 +12,7 @@ export interface Notification {
   data?: {
     grievance_id?: string;
     action_url?: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
   };
   created_at: string;
   read_at?: string;
@@ -107,8 +107,11 @@ export class NotificationService {
       this.saveNotifications();
       
       return data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to fetch notifications');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to fetch notifications'
+        : 'Failed to fetch notifications';
+      throw new Error(errorMessage);
     }
   }
 
@@ -117,8 +120,11 @@ export class NotificationService {
     try {
       const response = await api.get(API_ENDPOINTS.NOTIFICATIONS.LIST + `/${id}`);
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to fetch notification');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to fetch notification'
+        : 'Failed to fetch notification';
+      throw new Error(errorMessage);
     }
   }
 
@@ -137,8 +143,11 @@ export class NotificationService {
       }
       
       return updatedNotification;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to mark notification as read');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to mark notification as read'
+        : 'Failed to mark notification as read';
+      throw new Error(errorMessage);
     }
   }
 
@@ -148,8 +157,11 @@ export class NotificationService {
       const unreadNotifications = this.notifications.filter(n => !n.is_read);
       const promises = unreadNotifications.map(n => this.markAsRead(n.id));
       await Promise.all(promises);
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to mark all notifications as read');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to mark all notifications as read'
+        : 'Failed to mark all notifications as read';
+      throw new Error(errorMessage);
     }
   }
 
@@ -162,8 +174,11 @@ export class NotificationService {
       this.notifications = this.notifications.filter(n => n.id !== id);
       this.updateUnreadCount();
       this.saveNotifications();
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to delete notification');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to delete notification'
+        : 'Failed to delete notification';
+      throw new Error(errorMessage);
     }
   }
 
@@ -172,8 +187,11 @@ export class NotificationService {
     try {
       const response = await api.get(API_ENDPOINTS.NOTIFICATIONS.LIST + '/stats');
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to fetch notification stats');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to fetch notification stats'
+        : 'Failed to fetch notification stats';
+      throw new Error(errorMessage);
     }
   }
 

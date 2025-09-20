@@ -73,8 +73,11 @@ export class ImageService {
       });
 
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to upload image');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to upload image'
+        : 'Failed to upload image';
+      throw new Error(errorMessage);
     }
   }
 
@@ -86,8 +89,11 @@ export class ImageService {
     try {
       const uploadPromises = files.map(file => this.uploadImage(file, options));
       return await Promise.all(uploadPromises);
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to upload images');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to upload images'
+        : 'Failed to upload images';
+      throw new Error(errorMessage);
     }
   }
 
@@ -98,8 +104,11 @@ export class ImageService {
         image_id: imageId,
       });
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to analyze image');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to analyze image'
+        : 'Failed to analyze image';
+      throw new Error(errorMessage);
     }
   }
 
@@ -107,8 +116,11 @@ export class ImageService {
   async deleteImage(imageId: string): Promise<void> {
     try {
       await api.delete(API_ENDPOINTS.IMAGES.DELETE(imageId));
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to delete image');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to delete image'
+        : 'Failed to delete image';
+      throw new Error(errorMessage);
     }
   }
 

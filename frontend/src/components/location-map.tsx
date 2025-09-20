@@ -85,27 +85,29 @@ export default function LocationMap({
       onLocationSelect(latitude, longitude);
       setLocationPermission('granted');
       toast.success('Location detected successfully!');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error detecting location:', error);
       
       let errorMessage = 'Failed to detect location';
-      if (error.code === 1) {
-        errorMessage = 'Location access denied. Please enable location access in your browser settings.';
-        setLocationPermission('denied');
-      } else if (error.code === 2) {
-        errorMessage = 'Location unavailable. Please check your GPS settings.';
-        setLocationPermission('denied');
-      } else if (error.code === 3) {
-        errorMessage = 'Location request timed out. Please try again.';
-        setLocationPermission('denied');
+      if (error && typeof error === 'object' && 'code' in error) {
+        const errorCode = (error as { code: number }).code;
+        if (errorCode === 1) {
+          errorMessage = 'Location access denied. Please enable location access in your browser settings.';
+          setLocationPermission('denied');
+        } else if (errorCode === 2) {
+          errorMessage = 'Location unavailable. Please check your GPS settings.';
+          setLocationPermission('denied');
+        } else if (errorCode === 3) {
+          errorMessage = 'Location request timed out. Please try again.';
+          setLocationPermission('denied');
+        }
       }
       
       toast.error(errorMessage);
     }
   };
 
-  const handleMapClick = (e: any) => {
-    const { lat, lng } = e.latlng;
+  const handleMapClick = (lat: number, lng: number) => {
     onLocationSelect(lat, lng);
   };
 

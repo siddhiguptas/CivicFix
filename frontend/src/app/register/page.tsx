@@ -13,7 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
-import { authService } from '@/lib/auth';
+import { authService, UserRole } from '@/lib/auth';
 import { toast } from 'sonner';
 
 const registerSchema = z.object({
@@ -22,7 +22,7 @@ const registerSchema = z.object({
   confirmPassword: z.string().min(6, 'Please confirm your password'),
   full_name: z.string().min(2, 'Full name must be at least 2 characters'),
   phone: z.string().optional(),
-  role: z.enum(['citizen', 'admin', 'department_head']),
+  role: z.enum(['citizen', 'admin', 'department_head', 'moderator']),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
@@ -59,9 +59,10 @@ export default function RegisterPage() {
       await authService.register(registerData);
       toast.success('Registration successful! Please sign in.');
       router.push('/login');
-    } catch (error: any) {
-      setError(error.message);
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Registration failed';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -138,7 +139,7 @@ export default function RegisterPage() {
                 <Label htmlFor="role">Role</Label>
                 <Select
                   value={watch('role')}
-                  onValueChange={(value) => setValue('role', value as any)}
+                  onValueChange={(value) => setValue('role', value as UserRole)}
                   disabled={isLoading}
                 >
                   <SelectTrigger>
@@ -148,6 +149,7 @@ export default function RegisterPage() {
                     <SelectItem value="citizen">Citizen</SelectItem>
                     <SelectItem value="admin">Admin</SelectItem>
                     <SelectItem value="department_head">Department Head</SelectItem>
+                    <SelectItem value="moderator">Moderator</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.role && (

@@ -72,7 +72,7 @@ export default function EditGrievancePage() {
         setNewStatus(grievanceData.status);
         setAdminComment(grievanceData.comments?.[0]?.comment || '');
         setResolutionNotes(grievanceData.resolution_notes || '');
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Error loading grievance:', error);
         toast.error('Failed to load grievance');
         router.push('/dashboard/grievances');
@@ -109,14 +109,15 @@ export default function EditGrievancePage() {
       } else {
         // Citizens can only update their own grievances
         await grievanceService.updateGrievance(grievance.id, {
-          status: newStatus as any
+          status: newStatus as GrievanceStatus
         });
         toast.success('Grievance updated successfully');
         router.push(`/dashboard/grievances/${grievance.id}`);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating grievance:', error);
-      toast.error(error.message || 'Failed to update grievance');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update grievance';
+      toast.error(errorMessage);
     } finally {
       setIsSaving(false);
     }

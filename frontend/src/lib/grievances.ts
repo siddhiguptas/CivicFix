@@ -1,6 +1,10 @@
 import { api, API_ENDPOINTS } from './api';
 
 // Types
+export type GrievanceStatus = 'pending' | 'in_progress' | 'resolved' | 'rejected' | 'closed';
+export type GrievanceCategory = 'infrastructure' | 'sanitation' | 'transportation' | 'utilities' | 'safety' | 'other';
+export type GrievancePriority = 'low' | 'medium' | 'high' | 'urgent';
+
 export interface Location {
   type: 'Point';
   coordinates: [number, number]; // [longitude, latitude]
@@ -11,9 +15,9 @@ export interface Grievance {
   citizen_id: string;
   title: string;
   description: string;
-  category: string;
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  status: 'pending' | 'in_progress' | 'resolved' | 'rejected' | 'closed';
+  category: GrievanceCategory;
+  priority: GrievancePriority;
+  status: GrievanceStatus;
   location: {
     coordinates: [number, number];
     address?: string;
@@ -117,8 +121,11 @@ export class GrievanceService {
     try {
       const response = await api.post(API_ENDPOINTS.GRIEVANCES.CREATE, data);
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to create grievance');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to create grievance'
+        : 'Failed to create grievance';
+      throw new Error(errorMessage);
     }
   }
 
@@ -136,8 +143,11 @@ export class GrievanceService {
       const response = await api.get(`${API_ENDPOINTS.GRIEVANCES.LIST}?${params.toString()}`);
       // Backend returns array directly
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to fetch grievances');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to fetch grievances'
+        : 'Failed to fetch grievances';
+      throw new Error(errorMessage);
     }
   }
 
@@ -146,8 +156,11 @@ export class GrievanceService {
     try {
       const response = await api.get(API_ENDPOINTS.GRIEVANCES.GET(id));
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to fetch grievance');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to fetch grievance'
+        : 'Failed to fetch grievance';
+      throw new Error(errorMessage);
     }
   }
 
@@ -156,8 +169,11 @@ export class GrievanceService {
     try {
       const response = await api.put(API_ENDPOINTS.GRIEVANCES.UPDATE(id), data);
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to update grievance');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to update grievance'
+        : 'Failed to update grievance';
+      throw new Error(errorMessage);
     }
   }
 
@@ -165,8 +181,11 @@ export class GrievanceService {
   async deleteGrievance(id: string): Promise<void> {
     try {
       await api.delete(API_ENDPOINTS.GRIEVANCES.DELETE(id));
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to delete grievance');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to delete grievance'
+        : 'Failed to delete grievance';
+      throw new Error(errorMessage);
     }
   }
 
@@ -175,18 +194,24 @@ export class GrievanceService {
     try {
       const response = await api.get('/grievances/stats/overview');
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to fetch stats');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to fetch stats'
+        : 'Failed to fetch stats';
+      throw new Error(errorMessage);
     }
   }
 
   // Get admin stats
-  async getAdminStats(): Promise<any> {
+  async getAdminStats(): Promise<Record<string, unknown>> {
     try {
       const response = await api.get(API_ENDPOINTS.ADMIN.STATS);
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to fetch admin stats');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to fetch admin stats'
+        : 'Failed to fetch admin stats';
+      throw new Error(errorMessage);
     }
   }
 
@@ -197,8 +222,11 @@ export class GrievanceService {
         department,
       });
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to assign department');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to assign department'
+        : 'Failed to assign department';
+      throw new Error(errorMessage);
     }
   }
 
@@ -209,8 +237,11 @@ export class GrievanceService {
         status,
       });
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Failed to update status');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as any).response?.data?.detail || 'Failed to update status'
+        : 'Failed to update status';
+      throw new Error(errorMessage);
     }
   }
 }

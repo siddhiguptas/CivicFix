@@ -9,21 +9,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Building2, 
   Plus, 
   Search, 
-  Filter, 
   Users, 
-  FileText, 
-  Clock, 
-  CheckCircle,
-  AlertCircle,
   MoreHorizontal,
   Edit,
-  Trash2,
-  BarChart3
+  Trash2
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
@@ -55,6 +48,16 @@ interface DepartmentStats {
   resolution_rate: number;
 }
 
+interface DepartmentFormData {
+  name: string;
+  description: string;
+  contact_email: string;
+  contact_phone: string;
+  head_name: string;
+  categories: string[];
+  status: 'active' | 'inactive';
+}
+
 export default function DepartmentsPage() {
   const [departments, setDepartments] = useState<Department[]>([]);
   const [stats, setStats] = useState<DepartmentStats[]>([]);
@@ -67,14 +70,14 @@ export default function DepartmentsPage() {
   const [isInitializing, setIsInitializing] = useState(false);
 
   // Form state
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<DepartmentFormData>({
     name: '',
     description: '',
     contact_email: '',
     contact_phone: '',
     head_name: '',
-    categories: [] as string[],
-    status: 'active' as 'active' | 'inactive'
+    categories: [],
+    status: 'active'
   });
 
   useEffect(() => {
@@ -407,8 +410,8 @@ function DepartmentForm({
   onSubmit, 
   submitText 
 }: {
-  formData: any;
-  setFormData: (data: any) => void;
+  formData: DepartmentFormData;
+  setFormData: (data: DepartmentFormData) => void;
   onSubmit: () => void;
   submitText: string;
 }) {
@@ -494,7 +497,7 @@ function DepartmentForm({
             value={categoriesInput}
             onChange={(e) => setCategoriesInput(e.target.value)}
             placeholder="Add category (e.g., infrastructure)"
-            onKeyPress={(e) => e.key === 'Enter' && addCategory()}
+            onKeyDown={(e) => e.key === 'Enter' && addCategory()}
           />
           <Button type="button" onClick={addCategory} size="sm">
             Add
@@ -519,7 +522,7 @@ function DepartmentForm({
         <Label htmlFor="status">Status</Label>
         <Select 
           value={formData.status} 
-          onValueChange={(value) => setFormData({ ...formData, status: value })}
+          onValueChange={(value) => setFormData({ ...formData, status: value as 'active' | 'inactive' })}
         >
           <SelectTrigger>
             <SelectValue />
