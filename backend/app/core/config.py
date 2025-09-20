@@ -24,7 +24,12 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
     # CORS
-    ALLOWED_HOSTS: List[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
+    ALLOWED_HOSTS: List[str] = [
+        "http://localhost:3000", 
+        "http://127.0.0.1:3000",
+        "https://civic-bdjx8eijb-siddhi-guptas-projects-9629b30f.vercel.app",
+        "https://civic-fix-ecru.vercel.app"
+    ]
     
     # Database
     MONGODB_URL: str = "mongodb://localhost:27017"
