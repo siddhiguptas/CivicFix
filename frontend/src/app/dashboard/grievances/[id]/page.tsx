@@ -155,7 +155,7 @@ export default function GrievanceDetailPage() {
       <div className="text-center py-12">
         <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
         <h3 className="text-lg font-semibold text-gray-900 mb-2">Grievance not found</h3>
-        <p className="text-gray-500 mb-6">The grievance you're looking for doesn't exist or you don't have permission to view it.</p>
+        <p className="text-gray-500 mb-6">The grievance you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.</p>
         <Button asChild>
           <Link href="/dashboard/grievances">
             <ArrowLeft className="mr-2 h-4 w-4" />

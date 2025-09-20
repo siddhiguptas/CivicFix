@@ -697,7 +697,7 @@ export default function NewGrievancePage() {
                 ) : (
                   <div className="flex items-center gap-2 text-gray-600">
                     <Brain className="h-5 w-5" />
-                    <span>Click "Clarify with AI Analysis" button below to get department suggestion</span>
+                    <span>Click &quot;Clarify with AI Analysis&quot; button below to get department suggestion</span>
                   </div>
                 )}
               </CardContent>
