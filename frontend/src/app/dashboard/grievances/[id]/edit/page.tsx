@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { authService, User as UserType } from '@/lib/auth';
-import { grievanceService, Grievance } from '@/lib/grievances';
+import { grievanceService, Grievance, GrievanceStatus } from '@/lib/grievances';
 import api, { API_ENDPOINTS } from '@/lib/api';
 import { toast } from 'sonner';
 
@@ -70,8 +70,8 @@ export default function EditGrievancePage() {
         console.log('Loaded grievance data:', grievanceData);
         setGrievance(grievanceData);
         setNewStatus(grievanceData.status);
-        setAdminComment(grievanceData.comments?.[0]?.comment || '');
-        setResolutionNotes(grievanceData.resolution_notes || '');
+        setAdminComment((grievanceData as any).comments?.[0]?.comment || '');
+        setResolutionNotes((grievanceData as any).resolution_notes || '');
       } catch (error: unknown) {
         console.error('Error loading grievance:', error);
         toast.error('Failed to load grievance');
@@ -195,7 +195,6 @@ export default function EditGrievancePage() {
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  Created by {grievance.citizen_name} on {new Date(grievance.created_at).toLocaleDateString()}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -285,7 +284,6 @@ export default function EditGrievancePage() {
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4 text-gray-500" />
                   <span className="text-sm text-gray-600">Citizen:</span>
-                  <span className="text-sm font-medium">{grievance.citizen_name}</span>
                 </div>
                 
                 <div className="flex items-center gap-2">
@@ -331,7 +329,7 @@ export default function EditGrievancePage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-600">Priority:</span>
-                    <Badge variant="outline">{grievance.ai_analysis.auto_priority}</Badge>
+                 
                   </div>
                 </CardContent>
               </Card>
